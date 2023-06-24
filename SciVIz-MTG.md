@@ -1,13 +1,65 @@
 # Visualizzazione Scientifica con Magic the Gathering
 
 Magic the Gathering è un gioco di carte collezionabili (il primo mai esistito) nato nel 1993 e tuttora molto in voga. Lo scopo del gioco è sfidare gli avversari tramite la creazione di un mazzo personalizzato composto da diverse tipologie di carte e sconfiggerli riducendo i loro punti vita a zero. 
+
+
+## Carte
 Ogni carta è caratterizzata da uno o da una combinazione dei 5 colori presenti nel gioco. Esistono anche delle carte definite 'colorless'. Ogni colore è associato ad un insieme di caratteristiche e stili di gioco.
 
 <p align="center">
   <img src="images/purphoros.jpg" width=300/>
 </p>
 
-In alto a sinistra troviamo il nome della carta e in alto a destra il suo costo di mana. Sotto all'immagine troviamo il tipo della carta e una descrizione delle sue abilità. Infine nel caso delle creature in basso a destra troviamo la loro forza e la loro costituzione.
+Gli elementi che ci interessano sono:
+
+* Nome (in alto)
+* Costo di mana (in alto a destra)
+* Tipo (subito sotto all'immagine)
+* Rarità (è indicata dal colore del simbolo che si trova di fianco al tipo)
+* Forza e costituzione nel caso delle creature (in basso a destra)
+
+## Dataset
+Il dataset utilizzato è reperibile sul sito di [Scryfall](https://scryfall.com/docs/api/bulk-data) alla voce **defalut cards** ed è aggiornato giornalmente. Il dataset è in formato JSON e contiene un oggetto per ogni carta presente nel database del sito in lingua inglese o in un altro linguaggio di stampa nel caso la carta esistesse solo in quel linguaggio. È stata eseguita una pulizia preliminare del dataset e per ogni carta sono stati considerati solamente gli attributi utili allo scopo del progetto:
+
+* Nome (```name```)
+* Lingua (```lang```)
+* Layout (```layout```)
+* Tipo (```type_line```)
+* ID MTG Arena (```arena_id```)
+* ID MTG Online (```mtgo_id```)
+* Costo di mana (```mana_cost```)
+* Costo di mana convertito (```cmc```)
+* Identità di colore (```color_identity```)
+* Colori della carta (```colors```)
+* Randking EDHREC (```edhrec_rank```)
+* Forza (```power```)
+* Costituzione (```toughness```)
+* Prezzi (```prices```)
+* Rarità (```rarity```)
+* Set di appartenenza (```set_name```)
+
+È successivamente stata aggiunta una colonna che contiene il numero di colori di ogni carta, utile per alcuni conteggi eseguiti. 
+
+<p align="center">
+  <img src="images/num_colors.png"/>
+</p>
+
+Ogni carta presenta un tipo e un sottotipo. Per come è strutturato il dataset, compare una voce per ogni possibile combinazione di questi due elementi.
+
+<p align="center">
+  <img src="images/tipi.png"/>
+</p>
+
+È stata quindi eseguita un'operazione per suddividere le carte in dei dataset ristretti, uno per ciascuno dei 7 tipi principali che verranno illustrati più avanti.
+
+<p align="center">
+  <img src="images/suddivisione.png"/>
+</p>
+
+Come si può notare il tempo di esecuzione del codice non è trascurabile, tuttavia questa suddivisione permette di facilitare numerose operazioni di conteggio svolte successivamente.
+
+
+
 
 ## Colori
 
@@ -20,6 +72,16 @@ Come già accennato esistono 5 colori principali nel gioco. Ogni carta può esse
 * **Verde**: rappresenta la natura, la crescita e la forza fisica. I mazzi verdi presentano una vasta gamma di creature potenti e abilità di crescita che ne accrescono il potere nel corso del gioco.
 
 Un mazzo può essere composto da carte di un solo colore o di più colori.
+
+Esistono numerose combinazioni di colori:
+
+<p align="center">
+  <img src="images/combinazioni_colori.png"/>
+</p>
+
+Per convenienza le carte che presentano più di un colore verranno catalogate semplicemente come **multicolore**.
+
+
 
 Come possiamo osservare dai seguenti grafici (torta e barre) la distribuzione dei colori all'interno della totalità delle carte è abbastanza omogenea. 
 
@@ -41,6 +103,8 @@ Inoltre, come possiamo osservare dai seguenti istogrammi, la maggior parte delle
 
 ##Tipi
 
+Esistono 7 tipi principali di carte:
+
 * **Terre**: rappresentano la base di ogni mazzo. Forniscono il *mana*, ovvero la risorsa che permette ai giocatori di giocare le altre carte. È possibile giocarne solamente una per turno e ogni mazzo ne contiene un numero che consenta un equilibrio di gioco.
 * **Creature**: rappresentano un insieme variegato di esseri leggendari, bestie e altri personaggi e possono attaccare gli avversari e difendere chi le gioca. Hanno statistiche come forza e costituzione che determinano rispettivamente quanti danni infliggono e possono sopportare. Possono anche avere abilità particolari che influenzano il gioco.
 * **Incantesimi**: i giocatori utilizzano gli incantesimi per esercitare il controllo sul campo di battaglia e sfidare i loro avversari. Gli incantesimi possono influenzare e manipolare il gioco in vari modi: possono danneggiare creature, consentire al giocatore di pescare nuove carte, bloccare gli avversari, ecc. Una volta lanciati restano sul campo di battaglia finchè non vengono distrutti o rimossi da altre carte.
@@ -49,7 +113,8 @@ Inoltre, come possiamo osservare dai seguenti istogrammi, la maggior parte delle
 * **Planeswalker**:sono particolari carte che rappresentano personaggi potenti nel gioco. Sono degli "alleati" di chi li gioca e possono essere considerati come giocatori in partita. Hanno dei punti vita e delle abilità e possono essere attaccati e sconfitti.
 * **Artefatti**: rappresentano oggetti o dispositivi magici che forniscono vantaggi al giocatore e interferiscono con le strategie degli avversari.
 
-Dai seguenti grafici (torta e barre) possiamo osservare che, a differenza della distribuzione dei colori che risultava omogenea, per quanto riguarda il tipo delle carte abbiamo una forte presenza di creature, che rappresentano il 56% della totalità delle carte. Notiamo una bassissima presenza di planeswalker e carte diverse dai tipi principali, mentre per istantanei, incantesimi e stregonerie i numeri sono abbastanza simili.
+
+Dai seguenti grafici possiamo osservare che, a differenza della distribuzione dei colori che risultava omogenea, per quanto riguarda il tipo delle carte abbiamo una forte presenza di creature, che rappresentano il 56% della totalità delle carte. Notiamo una bassissima presenza di planeswalker e carte diverse dai tipi principali, mentre per istantanei, incantesimi e stregonerie i numeri sono abbastanza simili.
 
 <p align="center">
   <img src="images/notebook_cell_96_output_0.png"/>
@@ -119,7 +184,7 @@ Se però consideriamo le carte suddivise in base alla rarità le cose cambiano. 
   <img src="images/notebook_cell_119_output_0.png"/>
 </p>
 
-Nel dataset abbiamo a disposizione un altro dato che può essere messo in relazione al prezzo delle carte, ovvero il ranking EDHREC. EDHREC è un sito dedicato a commander, ovvero il formato di gioco di Magic più giocato con mazzi composti da 100 carte tutte diverse tra loro. Tale sito ha attribuito ad ogni carta un ranking che ne indica la popolarità nel formato. Dal grafico a dispersione possiamo osservare che esiste una debole correlazione tra ranking e prezzo delle carte. Infatti a ranking più alti (valori più vbassi dell'asse x) equivalgono prezzi tendenzialmente più alti. 
+Nel dataset abbiamo a disposizione un altro dato che può essere messo in relazione al prezzo delle carte, ovvero il ranking EDHREC. EDHREC è un sito dedicato a commander, ovvero il formato di Magic più giocato con mazzi composti da 100 carte tutte diverse tra loro. Tale sito ha attribuito ad ogni carta un ranking che ne indica la popolarità nel formato. Dal grafico a dispersione possiamo osservare che esiste una debole correlazione tra ranking e prezzo delle carte. Infatti a ranking più alti (valori più bassi dell'asse x) equivalgono prezzi tendenzialmente più alti. 
 
 <p align="center">
   <img src="images/notebook_cell_120_output_0.png"/>
