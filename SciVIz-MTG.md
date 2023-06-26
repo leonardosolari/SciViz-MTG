@@ -1,6 +1,7 @@
 # Visualizzazione Scientifica con Magic the Gathering
 
-Magic the Gathering è un gioco di carte collezionabili (il primo mai esistito) nato nel 1993 e tuttora molto in voga. Lo scopo del gioco è sfidare gli avversari tramite la creazione di un mazzo personalizzato composto da diverse tipologie di carte e sconfiggerli riducendo i loro punti vita a zero. 
+Magic the Gathering è un gioco di carte collezionabili (il primo mai esistito) nato nel 1993 e tuttora molto in voga. Lo scopo del gioco è sfidare gli avversari tramite la creazione di un mazzo personalizzato composto da diverse tipologie di carte e sconfiggerli riducendo i loro punti vita a zero.
+Attualmente conta più di 25.000 carte. 
 
 
 ## Carte
@@ -31,7 +32,7 @@ Il dataset utilizzato è reperibile sul sito di [Scryfall](https://scryfall.com/
 * Costo di mana convertito (```cmc```)
 * Identità di colore (```color_identity```)
 * Colori della carta (```colors```)
-* Randking EDHREC (```edhrec_rank```)
+* Ranking EDHREC (```edhrec_rank```)
 * Forza (```power```)
 * Costituzione (```toughness```)
 * Prezzi (```prices```)
